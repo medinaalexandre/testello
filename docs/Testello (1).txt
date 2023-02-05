@@ -1,0 +1,41 @@
+Testello
+
+Somos uma transportadora e prestamos serviço para N clientes. Cada um possui sua tabela de frete com reajuste periódico.
+
+Portanto, quando chega a época do reajuste são realizados manualmente a alteração de cada um dos clientes gerando custos para a empresa por alocação de horas de trabalho.
+
+Precisamos criar uma solução que permita subir um CSV com a respectiva tabela de frete de cada um dos Clientes (1 ou +) de maneira eficiente e que suporte uma grande quantidade de registros (Essas tabelas podem chegar a ter 300mil linhas).
+
+Como podemos resolver esse problema? De que maneira conseguimos fazer o upload de 1 ou + CSV's sem que o HTTP dê timeout?
+
+Requisitos negócio:
+
+- Criar estrutura banco de dados:    
+- Importar um arquivo CSV de tabela de frete de Cliente(s);
+- Salvar em Banco de dados;
+
+Requisitos Técnicos:
+
+- controle de versionamento (GIT)
+- PHP 7/8;
+- Utilizar Composer para libs externas;
+- Utilize o framework que se sentir confortável (ou não utilize);
+
+O que se espera: 
+
+- Utilização de PSR (https://www.php-fig.org/psr/ PSR-1 e PSR-12)
+- Desenvolvimento da Lógica para leitura do CSV;
+- Validação e cleanup dos dados;
+- Estruturação da tabela;
+- Salvar dados DB;
+- Escrever um README com passo a passo para reproduzir o teste;
+
+Diferenciais:
+
+- Clean code;
+- Docker;
+- TDD;
+- Faker/Mockery;
+
+Como entregar:
+Responda o email do teste com o link do repositório;
