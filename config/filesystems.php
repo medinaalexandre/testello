@@ -36,6 +36,12 @@ return [
             'throw' => false,
         ],
 
+        'deliveryTables' => [
+            'driver' => 'local',
+            'root' => storage_path('app/delivery-tables'),
+            'throw' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

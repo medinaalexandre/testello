@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Storage;
 
 class UploadDeliveryController extends Controller
 {
@@ -29,7 +30,8 @@ class UploadDeliveryController extends Controller
 
     public function uploadCsv(UploadCsvRequest $request): Redirector|Application|RedirectResponse
     {
-        $path = $request->file('customer_csv')?->storeAs('delivery-tables', $request->file('customer_csv')?->getClientOriginalName());
+        $file = $request->file('customer_csv');
+        Storage::disk('deliveryTables')->putFileAs('', $file, $file->getClientOriginalName());
 
         return redirect('/');
     }
