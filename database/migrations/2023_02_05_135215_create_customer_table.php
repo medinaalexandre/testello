@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('customer', function (Blueprint $table) {
+        Schema::create('customer', static function (Blueprint $table) {
             $table->id('customer_id');
             $table->string('name')->unique();
             $table->string('email')->nullable()->unique();
@@ -18,13 +18,8 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('customer');
     }
 };
