@@ -21,7 +21,7 @@ class DeliveryDataCsvParser extends DeliveryDataParser
 
     public function getNormalizedFromWeight(): ?float
     {
-        $normalized =  str_replace(',', '.', $this->fromWeight);
+        $normalized = str_replace(['.', ','], ['', '.'], $this->fromWeight);
 
         if (!is_numeric($normalized)) {
             return null;
@@ -32,7 +32,7 @@ class DeliveryDataCsvParser extends DeliveryDataParser
 
     public function getNormalizedToWeight(): ?float
     {
-        $normalized =  str_replace(',', '.', $this->toWeight);
+        $normalized = str_replace(['.', ','], ['', '.'], $this->toWeight);
 
         if (!is_numeric($normalized)) {
             return null;
@@ -43,12 +43,12 @@ class DeliveryDataCsvParser extends DeliveryDataParser
 
     public function getCostCents(): ?int
     {
-        $normalized = str_replace(',', '.', $this->cost);
+        $normalized = str_replace(['.', ','], ['', '.'], $this->cost);
 
         if (!is_numeric($normalized)) {
             return null;
         }
 
-        return (int) ((float) str_replace(',', '.', $this->cost) * 100);
+        return (int) ((float) $normalized * 100);
     }
 }
