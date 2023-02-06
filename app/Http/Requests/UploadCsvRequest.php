@@ -11,7 +11,8 @@ class UploadCsvRequest extends FormRequest
     {
         return [
             'customer_id' => 'required|exists:customer,customer_id',
-            'customer_csv' => 'required|file',
+            'customer_csv' => 'required|array',
+            'customer_csv.*' => 'required|file',
         ];
     }
 

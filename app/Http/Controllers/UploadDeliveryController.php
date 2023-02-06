@@ -32,11 +32,12 @@ class UploadDeliveryController extends Controller
 
     public function uploadCsv(UploadCsvRequest $request): Redirector|Application|RedirectResponse
     {
-        $file = $request->getCustomerCsv();
-        $fileName = Carbon::now()->toISOString() . $file->getClientOriginalName();
-        Storage::disk('deliveryTables')->putFileAs('', $file, $fileName);
+        foreach ($request->getCustomerCsv() as $file) {
+            $fileName = Carbon::now()->toISOString() . $file->getClientOriginalName();
+            Storage::disk('deliveryTables')->putFileAs('', $file, $fileName);
 
-        ProcessCustomerDeliveryCsv::dispatch($request->getCustomerId(), $fileName);
+            ProcessCustomerDeliveryCsv::dispatch($request->getCustomerId(), $fileName);
+        }
 
         return redirect('/');
     }

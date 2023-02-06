@@ -29,7 +29,7 @@
         </label>
         <label for="customer_csv">
             Selecione o arquivo
-            <input type="file" name="customer_csv" id="customer_csv">
+            <input type="file" name="customer_csv[]" id="customer_csv" accept="text/csv" multiple>
         </label>
         <div>
             <button type="submit">Enviar</button>

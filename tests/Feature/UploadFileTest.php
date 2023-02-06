@@ -16,7 +16,9 @@ it('should upload a csv file', function () {
 
     $res = $this->post('/upload-csv', [
         'customer_id' => $customer->getKey(),
-        'customer_csv' => UploadedFile::fake()->create($uploadFileName, mimeType: 'csv'),
+        'customer_csv' => [
+            UploadedFile::fake()->create($uploadFileName, mimeType: 'csv')
+        ],
     ]);
 
     $res->assertRedirect('/');
