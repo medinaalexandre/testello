@@ -22,7 +22,10 @@ use Throwable;
 
 class ProcessCustomerDeliveryCsv implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private array $validHeader = [
         'from_postcode',
