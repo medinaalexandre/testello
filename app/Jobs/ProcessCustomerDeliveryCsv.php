@@ -57,7 +57,6 @@ class ProcessCustomerDeliveryCsv implements ShouldQueue
             $this->validateHeader($file);
 
             $deliveries = [];
-            $nonProcessedLines = [];
 
             while ($line = fgetcsv($file, separator: ';')) {
                 try {
@@ -71,7 +70,7 @@ class ProcessCustomerDeliveryCsv implements ShouldQueue
             DB::transaction($this->insertDataToDatabase($deliveries));
 
             if (!empty($this->unprocessedLines)) {
-                Log::warning("Some lines of $this->fileName weren't imported", ['lines' => $nonProcessedLines]);
+                Log::warning("Some lines of $this->fileName weren't imported", ['lines' => $this->unprocessedLines]);
             }
 
         } finally {
@@ -98,19 +97,24 @@ class ProcessCustomerDeliveryCsv implements ShouldQueue
                     $location->customer_id = $this->customerId;
                     $location->save();
 
-                    /** @var DeliveryDataCsvParser $cost */
-                    foreach ($costs as $cost) {
-                        if (!$cost->isValid()) {
-                            $this->unprocessedLines[] = $cost->toString();
-                            continue;
+                    $bulkToInsert = array_map(function (DeliveryDataCsvParser $entry) use ($location) {
+                        if (!$entry->isValid()) {
+                            $this->unprocessedLines[] = $entry->toString();
+                            return null;
                         }
 
-                        $weightCost = new DeliveryWeightCost();
-                        $weightCost->location_id = $location->getKey();
-                        $weightCost->from_weight = $cost->getNormalizedFromWeight();
-                        $weightCost->to_weight = $cost->getNormalizedToWeight();
-                        $weightCost->cost_cents = $cost->getCostCents();
-                        $weightCost->save();
+                        return [
+                            'location_id' => $location->getKey(),
+                            'from_weight' => $entry->getNormalizedFromWeight(),
+                            'to_weight' => $entry->getNormalizedToWeight(),
+                            'cost_cents' => $entry->getCostCents(),
+                        ];
+                    }, $costs);
+
+                    $bulkToInsert = array_filter($bulkToInsert);
+
+                    if (!empty($bulkToInsert)) {
+                        DeliveryWeightCost::insert($bulkToInsert);
                     }
                 }
             }
