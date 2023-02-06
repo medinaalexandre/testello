@@ -43,4 +43,9 @@ class DeliveryWeightCost extends Model
 
     protected $table = 'delivery_weight_cost';
     protected $primaryKey = 'delivery_weight_cost_id';
+
+    protected $casts = [
+        'from_weight' => 'float',
+        'to_weight' => 'float',
+    ];
 }

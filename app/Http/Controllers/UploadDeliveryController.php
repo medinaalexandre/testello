@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UploadCsvRequest;
+use App\Jobs\ProcessCustomerDeliveryCsv;
 use App\Models\Customer;
+use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -30,8 +32,11 @@ class UploadDeliveryController extends Controller
 
     public function uploadCsv(UploadCsvRequest $request): Redirector|Application|RedirectResponse
     {
-        $file = $request->file('customer_csv');
-        Storage::disk('deliveryTables')->putFileAs('', $file, $file->getClientOriginalName());
+        $file = $request->getCustomerCsv();
+        $fileName = Carbon::now()->toISOString() . $file->getClientOriginalName();
+        Storage::disk('deliveryTables')->putFileAs('', $file, $fileName);
+
+        ProcessCustomerDeliveryCsv::dispatch($request->getCustomerId(), $fileName);
 
         return redirect('/');
     }

@@ -6,6 +6,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -19,6 +20,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read array|DeliveryWeightCost[] $weightCosts
  * @method static Builder|DeliveryLocation newModelQuery()
  * @method static Builder|DeliveryLocation newQuery()
  * @method static Builder|DeliveryLocation onlyTrashed()
@@ -41,4 +43,13 @@ class DeliveryLocation extends Model
 
     protected $table = 'delivery_location';
     protected $primaryKey = 'location_id';
+
+    public function weightCosts(): HasMany
+    {
+        return $this->hasMany(
+            DeliveryWeightCost::class,
+            $this->primaryKey,
+            $this->primaryKey,
+        )->orderBy('delivery_weight_cost.delivery_weight_cost_id');
+    }
 }

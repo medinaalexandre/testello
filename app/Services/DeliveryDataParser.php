@@ -15,9 +15,9 @@ abstract class DeliveryDataParser
 
     abstract public function getNormalizedFromPostcode(): string;
     abstract public function getNormalizedToPostcode(): string;
-    abstract public function getNormalizedFromWeight(): float;
-    abstract public function getNormalizedToWeight(): float;
-    abstract public function getCostCents(): int;
+    abstract public function getNormalizedFromWeight(): ?float;
+    abstract public function getNormalizedToWeight(): ?float;
+    abstract public function getCostCents(): ?int;
 
     public function toString(): string
     {
@@ -33,11 +33,16 @@ abstract class DeliveryDataParser
 
     public function isValid(): bool
     {
-        return $this->isValidPostCode($this->getNormalizedToPostcode())
-            && $this->isValidPostCode($this->getNormalizedFromPostcode())
+        return $this->hasValidLocation()
             && is_numeric($this->getNormalizedFromWeight())
             && is_numeric($this->getNormalizedToWeight())
             && is_numeric($this->getCostCents());
+    }
+
+    public function hasValidLocation(): bool
+    {
+        return $this->isValidPostCode($this->getNormalizedToPostcode())
+        && $this->isValidPostCode($this->getNormalizedFromPostcode());
     }
 
     protected function isValidPostCode(string $postcode): bool

@@ -82,11 +82,19 @@ class ProcessCustomerDeliveryCsv implements ShouldQueue
     protected function insertDataToDatabase(array $deliveries): Closure
     {
         return function () use ($deliveries) {
-            foreach ($deliveries as $fromPostcode => $destinations) {
-                foreach ($destinations as $toPostCode => $costs) {
+            foreach ($deliveries as $destinations) {
+                foreach ($destinations as $costs) {
+                    /** @var DeliveryDataCsvParser $deliveryData */
+                    $deliveryData = $costs[0];
+
+                    if (!$deliveryData->hasValidLocation()) {
+                        $this->unprocessedLines[] = $deliveryData->toString();
+                        continue;
+                    }
+
                     $location = new DeliveryLocation();
-                    $location->from_postcode = preg_replace('/\D/', '', $fromPostcode);
-                    $location->to_postcode = preg_replace('/\D/', '', $toPostCode);
+                    $location->from_postcode = $deliveryData->getNormalizedFromPostcode();
+                    $location->to_postcode = $deliveryData->getNormalizedToPostcode();
                     $location->customer_id = $this->customerId;
                     $location->save();
 
@@ -94,6 +102,7 @@ class ProcessCustomerDeliveryCsv implements ShouldQueue
                     foreach ($costs as $cost) {
                         if (!$cost->isValid()) {
                             $this->unprocessedLines[] = $cost->toString();
+                            continue;
                         }
 
                         $weightCost = new DeliveryWeightCost();

@@ -19,18 +19,36 @@ class DeliveryDataCsvParser extends DeliveryDataParser
         return preg_replace('/\D/', '', $this->toPostcode);
     }
 
-    public function getNormalizedFromWeight(): float
+    public function getNormalizedFromWeight(): ?float
     {
-        return (float) str_replace(',', '.', $this->fromWeight);
+        $normalized =  str_replace(',', '.', $this->fromWeight);
+
+        if (!is_numeric($normalized)) {
+            return null;
+        }
+
+        return (float) $normalized;
     }
 
-    public function getNormalizedToWeight(): float
+    public function getNormalizedToWeight(): ?float
     {
-        return (float) str_replace(',', '.', $this->fromWeight);
+        $normalized =  str_replace(',', '.', $this->toWeight);
+
+        if (!is_numeric($normalized)) {
+            return null;
+        }
+
+        return (float) $normalized;
     }
 
-    public function getCostCents(): int
+    public function getCostCents(): ?int
     {
+        $normalized = str_replace(',', '.', $this->cost);
+
+        if (!is_numeric($normalized)) {
+            return null;
+        }
+
         return (int) ((float) str_replace(',', '.', $this->cost) * 100);
     }
 }
