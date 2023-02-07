@@ -1,6 +1,7 @@
 # Testello
 Processador de tabelas com preço de fretes por cliente
 
+
 Ambiente
 --
 Com o intuito de agilizar a preparação do ambiente de desenvolvimento com docker, foi utilizado o pacote [Laravel Sail](https://laravel.com/docs/9.x/sail).
@@ -14,12 +15,22 @@ Execute o seguinte comando para criar um link simbólico com a pasta pública, n
 ./vendor/bin/sail php artisan storage:link
 ```
 
+Funcionalidades
+--
+O upload do arquivos é feito utilizando o pacote [laravel-plupload](https://github.com/jildertmiedema/laravel-plupload),
+que permite fazer o upload dos arquivos em chunks, assim evitando timeout da requisição em caso de arquivos.
+
+O processamento dos arquivos csv é realizado em background, pelo [sistema de filas do laravel](https://laravel.com/docs/9.x/queues), utilizando
+o [Redis](https://redis.io/) como mensageiro.
+
 Banco de dados
 --
 
 O esquema de tabelas construído para guardar os dados do teste pode ser visualizado no diagrama, gerado pelo [PHPStorm](https://www.jetbrains.com/help/phpstorm/creating-diagrams.html), a seguir:
 ![database schema](./docs/testello-database.png)
- 
+Foi separado os dados de preço por faixa de peso em uma tabela separada da localização pela seguinte lógica:
+Se este processo ocorre cerca de 1x/mês para cada cliente, foi decidido ter um processo mais custoso na inserção
+(bulk somente por custo por faixa de peso), para durante o mês inteiro ter mais fácil acesso aos dados na leitura. 
 
 Teste
 --

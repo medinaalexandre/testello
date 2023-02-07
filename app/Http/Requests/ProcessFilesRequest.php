@@ -3,16 +3,15 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\UploadedFile;
 
-class UploadCsvRequest extends FormRequest
+class ProcessFilesRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
             'customer_id' => 'required|exists:customer,customer_id',
-            'customer_csv' => 'required|array',
-            'customer_csv.*' => 'required|file',
+            'filenames' => 'required|array',
+            'filenames.*' => 'required|string',
         ];
     }
 
@@ -21,8 +20,8 @@ class UploadCsvRequest extends FormRequest
         return $this->validated()['customer_id'];
     }
 
-    public function getCustomerCsv(): array|UploadedFile|null
+    public function getFilenames(): array
     {
-        return $this->file('customer_csv');
+        return $this->validated()['filenames'];
     }
 }

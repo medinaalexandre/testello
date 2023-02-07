@@ -15,4 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [UploadDeliveryController::class, 'view'])->name('upload-view');
-Route::post('/upload-csv', [UploadDeliveryController::class, 'uploadCsv'])->name('upload-csv');
+Route::post('/upload',[UploadDeliveryController::class, 'upload'])->name('upload');
+Route::post('/process-files', [UploadDeliveryController::class, 'processFiles'])->name('process-files');

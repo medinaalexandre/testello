@@ -84,6 +84,7 @@ class ProcessCustomerDeliveryCsv implements ShouldQueue
     protected function insertDataToDatabase(array $deliveries): Closure
     {
         return function () use ($deliveries) {
+            $now = Carbon::now();
             foreach ($deliveries as $destinations) {
                 foreach ($destinations as $costs) {
                     /** @var DeliveryDataCsvParser $deliveryData */
@@ -100,7 +101,7 @@ class ProcessCustomerDeliveryCsv implements ShouldQueue
                     $location->customer_id = $this->customerId;
                     $location->save();
 
-                    $bulkToInsert = array_map(function (DeliveryDataCsvParser $entry) use ($location) {
+                    $bulkToInsert = array_map(function (DeliveryDataCsvParser $entry) use ($location, $now) {
                         if (!$entry->isValid()) {
                             $this->unprocessedLines[] = $entry->toString();
                             return null;
@@ -111,6 +112,8 @@ class ProcessCustomerDeliveryCsv implements ShouldQueue
                             'from_weight' => $entry->getNormalizedFromWeight(),
                             'to_weight' => $entry->getNormalizedToWeight(),
                             'cost_cents' => $entry->getCostCents(),
+                            'created_at' => $now,
+                            'updated_at' => $now,
                         ];
                     }, $costs);
 
