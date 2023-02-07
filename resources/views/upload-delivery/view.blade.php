@@ -6,19 +6,26 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Testello - Upload CSV</title>
+    @vite('resources/css/app.css')
 </head>
-<body>
-@if($errors->any())
-    @foreach($errors->all() as $error)
-        <p style="color:red;"> {{ $error }} </p>
-    @endforeach
-@endif
-<div style="display: flex; flex-direction: column; gap: 4px;">
-    <form action="{{ $action }}" method="POST" id="files-form" enctype="multipart/form-data">
+<body class="w-full h-screen flex items-center justify-center">
+<div class="flex flex-col border-2 border-rose-500 rounded-md p-8 lg:w-1/4">
+    <h1 class="text-2xl text-center text-rose-600 font-bold mb-4">Importar tabela de fretes</h1>
+    <form
+        action="{{ $action }}"
+        method="POST"
+        id="files-form"
+        enctype="multipart/form-data"
+        class="flex flex-col gap-4">
         @csrf
-        <label for="customer">
-            Selecione o cliente
-            <select name="customer_id" id="customer" required>
+        <label for="customer" class="flex flex-col gap-0">
+            Selecione o cliente:
+            <select
+                name="customer_id"
+                id="customer"
+                required
+                class="bg-white border px-4 py-3 rounded-md border-rose-600 outline-rose-700"
+            >
                 @php /** @var \App\Models\Customer $customer */ @endphp
                 @foreach($customers as $customer)
                     <option value="{{ $customer->getKey() }}">
@@ -27,13 +34,25 @@
                 @endforeach
             </select>
         </label>
-        <button type="button" id="current-browse-button">Selecione os arquivos</button>
+        <button
+            type="button"
+            id="current-browse-button"
+            class="inline-block mt-4 px-4 py-3 text-sm font-semibold text-center text-rose-600 border uppercase transition duration-200 ease-in-out border-rose-600  rounded-md cursor-pointer hover:bg-rose-700 hover:text-white"
+        >
+            Selecione os arquivos
+        </button>
     </form>
-    <ul id="selected-files">
+    <ul id="selected-files" class="flex flex-col my-4">
+        <li>teste</li>
+        <li>teste</li>
     </ul>
-    <div>
-        <button type="submit" id="send-button">Enviar</button>
-    </div>
+    <button
+        type="submit"
+        id="send-button"
+        class="inline-block mt-4 px-4 py-3 text-sm font-semibold text-center text-white uppercase transition duration-200 ease-in-out bg-rose-600  rounded-md cursor-pointer hover:bg-rose-700"
+    >
+        Enviar
+    </button>
 </div>
 </body>
 <script type="text/javascript" src="/vendor/jildertmiedema/laravel-plupload/js/plupload.full.min.js"></script>
